@@ -1,0 +1,12 @@
+# dependencies
+/node_modules
+# next
+/.next/
+/out/
+# misc
+.DS_Store
+*.pem
+# vercel
+.vercel
+# data branch artifacts live in git, but local probe scratch stays out
+data/events.json
