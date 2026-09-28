@@ -8,7 +8,7 @@ A live status page I built and operate like production: a scheduled prober check
 my sites every 30 minutes, stores every result in git, and files an incident
 automatically when something goes down.
 
-🌐 **Live:** deploying to Vercel — URL will be added here &nbsp;·&nbsp; 📡 **JSON API:** `/api/status` on the live URL
+🌐 **Live:** https://faizanxbuilds-status.vercel.app &nbsp;·&nbsp; 📡 **JSON API:** https://faizanxbuilds-status.vercel.app/api/status
 
 ![PulseDeck dashboard](public/screenshot-dashboard.png)
 
