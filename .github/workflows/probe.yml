@@ -1,0 +1,72 @@
+name: probe
+
+# The prober: checks every monitored service, stores results in git,
+# and files GitHub issues for incidents. The site reads the `data`
+# branch at runtime, so the dashboard stays live without rebuilds.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code (main)
+        uses: actions/checkout@v4
+        with:
+          path: src
+
+      - name: Check out data branch (or start it)
+        id: data
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data-ws
+        continue-on-error: true
+
+      - name: Initialize data branch on first run
+        if: steps.data.outcome == 'failure'
+        run: |
+          mkdir -p data-ws
+          cd data-ws
+          git init -b data
+          git config user.name "pulsedeck-prober"
+          git config user.email "pulsedeck-prober@users.noreply.github.com"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run prober
+        env:
+          PULSE_STATE_PATH: ${{ github.workspace }}/data-ws
+        run: node src/scripts/probe.mjs
+
+      - name: File GitHub issues for incidents
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULSE_STATE_PATH: ${{ github.workspace }}/data-ws
+        run: node src/scripts/sync-issues.mjs
+
+      - name: Commit and push state
+        run: |
+          cd data-ws
+          git config user.name "pulsedeck-prober"
+          git config user.email "pulsedeck-prober@users.noreply.github.com"
+          git add state.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "probe: $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+            git push origin data
+          fi
