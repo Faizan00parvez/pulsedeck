@@ -7,30 +7,11 @@ import "./globals.css";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-const SITE_URL = "https://faizanxbuilds-status.vercel.app";
-const OG_IMAGE = `${SITE_URL}/og-image.png`;
-const OG_TITLE = "PulseDeck — live status of everything I ship";
-const OG_DESCRIPTION =
-  "A public uptime dashboard: a scheduled prober checks my production sites every 30 minutes, stores results in git, and files incidents automatically. Built by Faizan Parvez.";
-
 export const metadata: Metadata = {
-  title: OG_TITLE,
-  description: OG_DESCRIPTION,
+  title: "PulseDeck — live status of everything I ship",
+  description:
+    "A public uptime dashboard: a scheduled prober checks my production sites around the clock, stores results in git, and files incidents automatically. Built by Faizan Parvez.",
   icons: { icon: "/favicon.svg" },
-  openGraph: {
-    title: OG_TITLE,
-    description: OG_DESCRIPTION,
-    url: SITE_URL,
-    siteName: "PulseDeck",
-    type: "website",
-    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "PulseDeck status dashboard" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: OG_TITLE,
-    description: OG_DESCRIPTION,
-    images: [OG_IMAGE],
-  },
 };
 
 function Nav() {
@@ -67,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <a href="https://github.com/Faizan00parvez" className="text-mist-300 hover:text-mist-100 underline underline-offset-4">
                 Faizan Parvez
               </a>{" "}
-              — probed every 30 min by GitHub Actions.
+              — probed around the clock by GitHub Actions.
             </p>
             <div className="flex gap-4">
               <a href="https://github.com/Faizan00parvez/pulsedeck" className="hover:text-mist-100 underline underline-offset-4">Source</a>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { DATA_URL } from "@/lib/services";
-import { isUp, latencyStats, uptimePct } from "@/lib/stats";
+import { isUp, latencyStats, measuredCadenceMs, uptimePct } from "@/lib/stats";
 import { SERVICES } from "@/lib/services";
 import type { ProbeState } from "@/lib/types";
 import snapshot from "@/data/state.json";
@@ -9,6 +9,8 @@ import snapshot from "@/data/state.json";
  * Public JSON status API.
  * Proxies the live probe state (cached 5 min) with a bundled fallback,
  * so /api/status is always fast and always honest about freshness.
+ * The cadence reported is the measured one — GitHub's scheduler is
+ * best-effort, so the configured cron is not what actually happens.
  */
 export async function GET() {
   let state = snapshot as ProbeState;
@@ -40,11 +42,16 @@ export async function GET() {
     };
   });
 
+  const cadenceMs = measuredCadenceMs(state);
+
   return NextResponse.json({
     status: services.every((s) => s.status !== "down") ? "operational" : "incident",
     live,
     updated_at: state.updatedAt,
-    probe_cadence_minutes: 30,
+    probe_schedule: "*/30 * * * *",
+    probe_cadence_minutes: cadenceMs === null ? null : Math.round(cadenceMs / 60000),
+    probe_cadence_note:
+      "Measured from recent probe timestamps. GitHub Actions schedules are best-effort, so the observed cadence differs from the configured cron.",
     services,
   });
 }

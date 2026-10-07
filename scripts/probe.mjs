@@ -2,7 +2,7 @@
 /**
  * PulseDeck prober.
  *
- * Runs on a schedule (GitHub Actions, every 30 min) and locally via
+ * Runs on a schedule (GitHub Actions, cron every 30 min) and locally via
  * `npm run probe`. For each configured service it records reachability,
  * latency and HTTP status, maintains rolling samples + daily aggregates,
  * detects incidents (up->down transitions), and writes data/state.json.
@@ -35,7 +35,7 @@ const MAX_INCIDENTS = 50;
 const SERVICES = [
   { slug: "portfolio", name: "Portfolio", url: "https://faizanxbuilds.github.io" },
   { slug: "greet", name: "GREET Teacher Training College", url: "https://greetteachertrainingcollege.in" },
-  { slug: "seenbyai", name: "SeenByAI", url: "https://seenbyai-one.vercel.app" },
+  { slug: "deploywatch", name: "DeployWatch", url: "https://faizanxbuilds.github.io/DeployWatch/" },
   { slug: "github-api", name: "GitHub API", url: "https://api.github.com/zen" },
   { slug: "google-edge", name: "Google Edge", url: "https://www.google.com/generate_204" },
 ];

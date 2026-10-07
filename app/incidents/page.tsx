@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { SERVICES } from "../../lib/services";
-import { useProbeState } from "../../lib/data";
-import { allIncidents, formatDuration } from "../../lib/stats";
+import { useNow, useProbeState } from "../../lib/data";
+import { allIncidents, formatDuration, timeAgoFrom, totalChecks } from "../../lib/stats";
 
 export default function IncidentsPage() {
   const { state } = useProbeState();
+  const now = useNow(1000);
   const incidents = allIncidents(state);
   const nameOf = (slug: string) => SERVICES.find((s) => s.slug === slug)?.name ?? slug;
 
@@ -21,10 +22,15 @@ export default function IncidentsPage() {
 
       <div className="mt-8 space-y-3">
         {incidents.length === 0 && (
-          <p className="text-mist-500 text-sm rounded-2xl border border-ink-600/70 bg-ink-900 p-6">
-            No incidents recorded yet. The prober runs every 30 minutes — if anything
-            I monitor goes down, it will show up here.
-          </p>
+          <div className="text-mist-500 text-sm rounded-2xl border border-ink-600/70 bg-ink-900 p-6">
+            <p className="text-mist-100 font-medium">No incidents in the recorded history.</p>
+            <p className="mt-1.5 leading-relaxed">
+              {totalChecks(state)} checks ran across {SERVICES.length} services — last check{" "}
+              {timeAgoFrom(state.updatedAt, now)}. An empty log with a running prober is the
+              good outcome. If anything I monitor goes down, the pipeline files a GitHub
+              issue automatically and it shows up here.
+            </p>
+          </div>
         )}
         {incidents.map(({ slug, incident: inc }) => {
           const open = inc.endedAt === null;

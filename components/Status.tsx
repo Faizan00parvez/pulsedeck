@@ -1,13 +1,16 @@
 import Link from "next/link";
+import { useNow } from "../lib/data";
 import { SERVICES } from "../lib/services";
-import { isUp, latencyStats, openIncidents, timeAgo, uptimePct } from "../lib/stats";
+import { formatCadence, isUp, latencyStats, measuredCadenceMs, openIncidents, timeAgoFrom, uptimePct } from "../lib/stats";
 import type { ProbeState } from "../lib/types";
 import { StatusDot, statusColor, statusLabel } from "./StatusDot";
 import { UptimeBars } from "./UptimeBars";
 
 export function StatusBanner({ state, live }: { state: ProbeState; live: boolean }) {
+  const now = useNow(1000);
   const open = openIncidents(state);
   const allUp = open.length === 0;
+  const cadence = measuredCadenceMs(state);
   return (
     <div
       className={`rounded-2xl border px-6 py-5 flex items-center gap-4 ${
@@ -23,7 +26,11 @@ export function StatusBanner({ state, live }: { state: ProbeState; live: boolean
           {allUp ? "All systems operational" : `${open.length} incident${open.length > 1 ? "s" : ""} ongoing`}
         </p>
         <p className="text-sm text-mist-500">
-          {live ? "Live" : "Snapshot"} data · updated {timeAgo(state.updatedAt)}
+          {live ? "Live" : "Snapshot"} data · checked {timeAgoFrom(state.updatedAt, now)}
+          {cadence !== null && <> · probes {formatCadence(cadence)} (measured)</>}
+        </p>
+        <p className="text-xs text-mist-600 font-mono mt-0.5">
+          last probe {new Date(state.updatedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
         </p>
       </div>
       <Link href="/incidents" className="text-sm text-mist-300 hover:text-mist-100 underline underline-offset-4 shrink-0">
@@ -68,7 +75,7 @@ function ServiceCard({ state, slug }: { state: ProbeState; slug: string }) {
 
 export function ServiceGrid({ state }: { state: ProbeState }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
       {SERVICES.map((s) => (
         <ServiceCard key={s.slug} state={state} slug={s.slug} />
       ))}

@@ -18,10 +18,10 @@ export const SERVICES: ServiceDef[] = [
     category: "mine",
   },
   {
-    slug: "seenbyai",
-    name: "SeenByAI",
-    url: "https://seenbyai-one.vercel.app",
-    description: "My indie SaaS MVP — AI visibility audits for local businesses.",
+    slug: "deploywatch",
+    name: "DeployWatch",
+    url: "https://faizanxbuilds.github.io/DeployWatch/",
+    description: "My live Kubernetes deployment watcher — Flask, Docker, Helm, ArgoCD.",
     category: "mine",
   },
   {

@@ -9,7 +9,7 @@ const STEPS = [
   {
     title: "Schedule",
     file: ".github/workflows/probe.yml",
-    desc: "GitHub Actions runs the prober every 30 minutes. Concurrency is locked so two runs never overlap and corrupt state.",
+    desc: "GitHub Actions is scheduled to run the prober every 30 minutes (cron */30). GitHub's scheduler is best-effort, so runs actually land every few hours — the dashboard measures the real cadence from probe timestamps and displays that instead of the configured one. Concurrency is locked so two runs never overlap and corrupt state.",
   },
   {
     title: "Store",
@@ -35,15 +35,15 @@ const DECISIONS = [
   },
   {
     q: "Why a separate data branch instead of redeploying?",
-    a: "Probing every 30 minutes means 48 deploys a day. Fetching state.json at runtime from the data branch keeps the dashboard live while the site itself deploys only when code changes. Hot data plane, cold deploy plane.",
+    a: "Probing around the clock would mean dozens of deploys a day. Fetching state.json at runtime from the data branch keeps the dashboard live while the site itself deploys only when code changes. Hot data plane, cold deploy plane.",
   },
   {
     q: "Why GitHub Issues for incidents?",
     a: "It's the alerting primitive that's already there: timestamped, assignable, commentable, and closable by automation. It mirrors how real on-call rotations track incidents without adding PagerDuty-style cost.",
   },
   {
-    q: "Why 30-minute cadence, not 1-minute?",
-    a: "A deliberate cost/precision trade-off. These are brochure sites, not payment gateways — 30 minutes catches real outages while staying far inside free-tier limits for Actions minutes and git history size.",
+    q: "Why not probe every minute?",
+    a: "A deliberate cost/precision trade-off. These are brochure sites, not payment gateways — a few checks a day catches real outages while staying far inside free-tier limits for Actions minutes and git history size. And instead of claiming a cadence, the dashboard measures the real one from probe timestamps: GitHub's scheduler is best-effort, so honest reporting beats a configured number.",
   },
 ];
 

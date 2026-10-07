@@ -1,23 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { useProbeState } from "../lib/data";
+import { useNow, useProbeState } from "../lib/data";
+import { formatCadence, measuredCadenceMs, timeAgoFrom } from "../lib/stats";
 import { ServiceGrid, StatusBanner } from "../components/Status";
+import { ProofSection } from "../components/Proof";
 
 export default function Home() {
   const { state, live } = useProbeState();
+  const now = useNow(1000);
+  const cadence = measuredCadenceMs(state);
   return (
     <div>
       {/* Hero */}
       <div className="bg-grid border-b border-ink-600/60">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-14 pb-10">
-          <p className="text-sm font-mono text-emerald-300/90 mb-3">● live · probed every 30 min</p>
+          <p className="text-sm font-mono text-emerald-300/90 mb-3">
+            ● {live ? "live" : "loading live data"} · checked {timeAgoFrom(state.updatedAt, now)}
+            {cadence !== null && <> · probes {formatCadence(cadence)}</>}
+          </p>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
             Everything I ship,<br />monitored in public.
           </h1>
           <p className="text-mist-300 mt-4 max-w-2xl text-lg">
             PulseDeck is a status page I built and operate like production: a scheduled
-            prober checks my sites every 30 minutes, stores every result in git, and
+            prober checks my sites around the clock, stores every result in git, and
             files an incident automatically when something goes down.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
@@ -46,6 +53,8 @@ export default function Home() {
           </div>
           <ServiceGrid state={state} />
         </section>
+
+        <ProofSection state={state} />
 
         <section className="rounded-2xl border border-ink-600/70 bg-ink-900 p-6">
           <h2 className="text-lg font-semibold mb-2">Why a status page?</h2>

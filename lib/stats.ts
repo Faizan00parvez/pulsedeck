@@ -96,11 +96,70 @@ export function formatDuration(ms: number): string {
 }
 
 export function timeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  if (ms < 60000) return "just now";
+  return timeAgoFrom(iso, Date.now());
+}
+
+export function timeAgoFrom(iso: string, nowMs: number): string {
+  const ms = nowMs - new Date(iso).getTime();
+  if (ms < 0) return "just now";
+  if (ms < 10000) return "just now";
+  if (ms < 60000) return `${Math.floor(ms / 1000)}s ago`;
   const mins = Math.floor(ms / 60000);
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return `${hrs}h ago`;
   return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function richestSamples(state: ProbeState): Sample[] {
+  let best: Sample[] = [];
+  for (const svc of Object.values(state.services)) {
+    if (svc.samples.length > best.length) best = svc.samples;
+  }
+  return best;
+}
+
+/**
+ * Measured probe cadence: median gap between recent probe timestamps.
+ * GitHub's scheduler is best-effort, so the configured cron schedule is not
+ * what actually happens — the page reports the observed cadence instead.
+ */
+export function measuredCadenceMs(state: ProbeState, lookback = 12): number | null {
+  const recent = richestSamples(state).slice(-lookback);
+  if (recent.length < 2) return null;
+  const gaps: number[] = [];
+  for (let i = 1; i < recent.length; i++) {
+    const g = recent[i].t - recent[i - 1].t;
+    if (g > 0) gaps.push(g);
+  }
+  if (gaps.length === 0) return null;
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+
+export function formatCadence(ms: number): string {
+  const mins = Math.round(ms / 60000);
+  if (mins < 60) return `~${mins}m`;
+  const hrs = Math.round((mins / 60) * 2) / 2;
+  return `~${hrs}h`;
+}
+
+/** Last N probe timestamps, newest first — the on-page audit trail. */
+export function recentProbeTimes(state: ProbeState, n = 8): number[] {
+  return richestSamples(state)
+    .slice(-n)
+    .map((s) => s.t)
+    .reverse();
+}
+
+/** Total checks recorded across the richest service history. */
+export function totalChecks(state: ProbeState): number {
+  return richestSamples(state).length;
+}
+
+/** Days of probe history available. */
+export function historyDays(state: ProbeState, nowMs: number): number {
+  const s = richestSamples(state);
+  if (s.length === 0) return 0;
+  return Math.max(1, Math.round((nowMs - s[0].t) / 86400000));
 }
