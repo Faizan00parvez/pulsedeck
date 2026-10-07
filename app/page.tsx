@@ -15,9 +15,15 @@ export default function Home() {
       {/* Hero */}
       <div className="bg-grid border-b border-ink-600/60">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-14 pb-10">
-          <p className="text-sm font-mono text-emerald-300/90 mb-3">
-            ● {live ? "live" : "loading live data"} · checked {timeAgoFrom(state.updatedAt, now)}
-            {cadence !== null && <> · probes {formatCadence(cadence)}</>}
+          <p className="text-sm font-mono text-emerald-300/90 mb-3 flex items-center gap-2">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="dot-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            <span>
+              {live ? "live" : "loading live data"} · checked {timeAgoFrom(state.updatedAt, now)}
+              {cadence !== null && <> · probes {formatCadence(cadence)}</>}
+            </span>
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
             Everything I ship,<br />monitored in public.
