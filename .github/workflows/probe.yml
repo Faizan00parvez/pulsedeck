@@ -67,6 +67,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "no changes"
           else
-            git commit -m "probe: $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+            git commit -m "probe: $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci] [vercel skip]"
             git push origin data
           fi
