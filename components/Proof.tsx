@@ -37,13 +37,16 @@ export function ProofSection({ state }: { state: ProbeState }) {
 
   return (
     <section className="rounded-2xl border border-ink-600/70 bg-ink-900 p-6">
-      <h2 className="text-lg font-semibold">Don&apos;t take my word for it</h2>
+      <h2 className="text-lg font-semibold">Probe activity</h2>
       <p className="text-mist-300 text-[15px] mt-2 leading-relaxed">
         {checks > 0 ? (
           <>
-            <span className="text-mist-100 font-medium">{checks} checks</span> recorded over{" "}
-            <span className="text-mist-100 font-medium">{days} day{days === 1 ? "" : "s"}</span>.
-            The last few probe times, straight from the data this page renders:
+            <span className="text-mist-100 font-medium">{checks} checks</span>{" "}
+            recorded over{" "}
+            <span className="text-mist-100 font-medium">
+              {days} day{days === 1 ? "" : "s"}
+            </span>
+            . Recent probe times are listed below.
           </>
         ) : (
           "Probe timestamps will appear here once the first scheduled run lands."
@@ -55,7 +58,10 @@ export function ProofSection({ state }: { state: ProbeState }) {
           {probes.map((t) => (
             <li key={t} className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
-              {new Date(t).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
+              {new Date(t).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
             </li>
           ))}
         </ul>

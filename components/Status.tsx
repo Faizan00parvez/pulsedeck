@@ -1,84 +1,129 @@
 import Link from "next/link";
 import { useNow } from "../lib/data";
 import { SERVICES } from "../lib/services";
-import { formatCadence, isUp, latencyStats, measuredCadenceMs, openIncidents, timeAgoFrom, uptimePct } from "../lib/stats";
+import {
+  formatCadence,
+  isUp,
+  latencyStats,
+  measuredCadenceMs,
+  openIncidents,
+  timeAgoFrom,
+  uptimePct,
+} from "../lib/stats";
 import type { ProbeState } from "../lib/types";
-import { StatusDot, statusColor, statusLabel } from "./StatusDot";
+import { statusColor, statusLabel } from "./StatusDot";
 import { UptimeBars } from "./UptimeBars";
 
-export function StatusBanner({ state, live }: { state: ProbeState; live: boolean }) {
-  const now = useNow(1000);
-  const open = openIncidents(state);
-  const allUp = open.length === 0;
-  const cadence = measuredCadenceMs(state);
+function Signal() {
   return (
-    <div
-      className={`rounded-2xl border px-6 py-5 flex items-center gap-4 ${
-        allUp ? "border-emerald-500/30 bg-emerald-500/[0.07]" : "border-red-500/30 bg-red-500/[0.07]"
-      }`}
-    >
-      <span className="relative flex h-4 w-4 shrink-0">
-        <span className={`dot-pulse absolute inline-flex h-full w-full rounded-full ${allUp ? "bg-emerald-400" : "bg-red-400"}`} />
-        <span className={`relative inline-flex rounded-full h-4 w-4 ${allUp ? "bg-emerald-400" : "bg-red-400"}`} />
-      </span>
-      <div className="flex-1">
-        <p className={`text-lg font-semibold ${allUp ? "text-emerald-300" : "text-red-300"}`}>
-          {allUp ? "All systems operational" : `${open.length} incident${open.length > 1 ? "s" : ""} ongoing`}
-        </p>
-        <p className="text-sm text-mist-500">
-          {live ? "Live" : "Snapshot"} data · checked {timeAgoFrom(state.updatedAt, now)}
-          {cadence !== null && <> · probes {formatCadence(cadence)} (measured)</>}
-        </p>
-        <p className="text-xs text-mist-600 font-mono mt-0.5">
-          last probe {new Date(state.updatedAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
-        </p>
-      </div>
-      <Link href="/incidents" className="text-sm text-mist-300 hover:text-mist-100 underline underline-offset-4 shrink-0">
-        Incident log
-      </Link>
-    </div>
+    <svg className="signal" viewBox="0 0 380 160" aria-hidden="true">
+      {Array.from({ length: 23 }, (_, row) => {
+        const points = Array.from({ length: 90 }, (_, i) => {
+          const x = i * 4.4;
+          const y =
+            48 +
+            row * 3 +
+            Math.sin(x / 53 + row / 14) * 30 +
+            Math.sin(x / 34 - row / 17) * 15;
+          return x + "," + y.toFixed(2);
+        }).join(" ");
+        return (
+          <polyline
+            key={row}
+            points={points}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeDasharray="0.1 4.6"
+          />
+        );
+      })}
+    </svg>
   );
 }
 
-function ServiceCard({ state, slug }: { state: ProbeState; slug: string }) {
-  const def = SERVICES.find((s) => s.slug === slug)!;
-  const up = isUp(state, slug);
-  const up30 = uptimePct(state, slug, 30);
-  const lat = latencyStats(state, slug);
+export function StatusBanner({
+  state,
+  live,
+}: {
+  state: ProbeState;
+  live: boolean;
+}) {
+  const now = useNow(1000);
+  const open = openIncidents(state);
+  const cadence = measuredCadenceMs(state);
   return (
-    <Link
-      href={`/services/${slug}`}
-      className="block rounded-2xl border border-ink-600/70 bg-ink-900 p-5 hover:border-mist-600 hover:bg-ink-800/60 transition-colors"
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <StatusDot state={state} slug={slug} />
-          <h3 className="font-semibold truncate">{def.name}</h3>
-        </div>
-        <span className={`text-sm font-medium ${statusColor(state, slug)}`}>{statusLabel(state, slug)}</span>
+    <section className={"health-panel" + (open.length ? " outage" : "")}>
+      <div>
+        <p className="monitor-label">
+          <i />
+          {live ? "Live monitoring" : "Monitoring snapshot"}
+        </p>
+        <h2>
+          {open.length
+            ? open.length + " ongoing incident" + (open.length > 1 ? "s" : "")
+            : "All systems operational"}
+        </h2>
+        <p className="timing" title={new Date(state.updatedAt).toUTCString()}>
+          Checked {timeAgoFrom(state.updatedAt, now)}
+          {cadence !== null && <> · Probes {formatCadence(cadence)}</>}
+        </p>
+        <Link href="/incidents">View incident log →</Link>
       </div>
-      <p className="text-sm text-mist-500 mt-1 truncate font-mono">{def.url.replace(/^https?:\/\//, "")}</p>
-      <div className="mt-4">
-        <UptimeBars state={state} slug={slug} days={90} />
-      </div>
-      <div className="flex items-center justify-between mt-3 text-sm">
-        <span className="text-mist-500">
-          {up30 === null ? "collecting data" : `${up30.toFixed(2)}% uptime · 30d`}
-        </span>
-        <span className="text-mist-500 font-mono">
-          {lat === null ? "—" : up === false ? "down" : `${lat.avg} ms avg`}
-        </span>
-      </div>
-    </Link>
+      <Signal />
+    </section>
   );
 }
 
 export function ServiceGrid({ state }: { state: ProbeState }) {
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-      {SERVICES.map((s) => (
-        <ServiceCard key={s.slug} state={state} slug={s.slug} />
-      ))}
+    <div className="directory">
+      <div className="service-line columns" aria-hidden="true">
+        <span>Service / endpoint</span>
+        <span>Availability</span>
+        <span>Uptime · 30d</span>
+        <span>Avg latency</span>
+        <span />
+      </div>
+      {SERVICES.map((service) => {
+        const slug = service.slug;
+        const uptime = uptimePct(state, slug, 30);
+        const latency = latencyStats(state, slug);
+        return (
+          <Link
+            className="service-line service-row"
+            key={slug}
+            href={`/services/${slug}`}
+          >
+            <div className="service-name">
+              <strong>{service.name}</strong>
+              <small>{service.url.replace(/^https?:\/\//, "")}</small>
+            </div>
+            <div className="availability">
+              <UptimeBars state={state} slug={slug} />
+              <small className={statusColor(state, slug)}>
+                {statusLabel(state, slug)}
+              </small>
+            </div>
+            <span className="reading">
+              <b>30d uptime </b>
+              {uptime === null ? "—" : uptime.toFixed(2) + "%"}
+            </span>
+            <span className="reading">
+              <b>Avg latency </b>
+              {latency === null
+                ? "—"
+                : isUp(state, slug) === false
+                  ? "down"
+                  : latency.avg + " ms"}
+            </span>
+            <span className="row-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 }

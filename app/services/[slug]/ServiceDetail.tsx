@@ -43,7 +43,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
         {statusLabel(state, slug)} · {live ? "live" : "snapshot"} · updated {timeAgo(state.updatedAt)}
       </p>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+      <div className="detail-stats grid grid-cols-2 sm:grid-cols-4 mt-8">
         {stat("Uptime · 24h", up24 === null ? "—" : `${up24.toFixed(2)}%`)}
         {stat("Uptime · 7d", up7 === null ? "—" : `${up7.toFixed(2)}%`)}
         {stat("Uptime · 30d", up30 === null ? "—" : `${up30.toFixed(2)}%`)}
@@ -112,3 +112,4 @@ export default function ServiceDetail({ slug }: { slug: string }) {
     </div>
   );
 }
+
