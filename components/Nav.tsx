@@ -6,6 +6,7 @@ const pages = [
   ["/", "Overview"],
   ["/incidents", "Incidents"],
   ["/architecture", "Architecture"],
+  ["/demo", "Demo"],
 ];
 export function Nav() {
   const path = usePathname();
