@@ -42,9 +42,11 @@ probe.mjs      Actions         data branch   Issues        + Vercel
 |---------|-----|-----|
 | Portfolio | faizanxbuilds.github.io | My DevOps portfolio |
 | GREET Teacher Training College | greetteachertrainingcollege.in | Production site I built and maintain |
-| SeenByAI | seenbyai-one.vercel.app | My indie SaaS MVP |
-| GitHub API | api.github.com/zen | Third-party control |
-| Google Edge | google.com/generate_204 | Third-party control |
+| DeployWatch | faizanxbuilds.github.io/DeployWatch/ | Kubernetes delivery project |
+| Slip 025 | checkout-incident-lab.vercel.app | Checkout tracing lab |
+| Holdpoint | faizan00parvez.github.io/holdpoint/ | Canary rollout replay |
+
+[Run the incident drill](https://faizanxbuilds-status.vercel.app/demo) to send simulated probe results and follow an incident through recovery.
 
 ## Design decisions
 

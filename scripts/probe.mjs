@@ -36,8 +36,8 @@ const SERVICES = [
   { slug: "portfolio", name: "Portfolio", url: "https://faizanxbuilds.github.io" },
   { slug: "greet", name: "GREET Teacher Training College", url: "https://greetteachertrainingcollege.in" },
   { slug: "deploywatch", name: "DeployWatch", url: "https://faizanxbuilds.github.io/DeployWatch/" },
-  { slug: "github-api", name: "GitHub API", url: "https://api.github.com/zen" },
-  { slug: "google-edge", name: "Google Edge", url: "https://www.google.com/generate_204" },
+  { slug: "slip-025", name: "Slip 025", url: "https://checkout-incident-lab.vercel.app/" },
+  { slug: "holdpoint", name: "Holdpoint", url: "https://faizan00parvez.github.io/holdpoint/" },
 ];
 
 function emptyService() {
@@ -118,6 +118,7 @@ function detectIncidents(svc, nowIso) {
 
 async function main() {
   const state = loadState();
+  for (const slug of ["github-api", "google-edge"]) delete state.services[slug];
   const now = new Date();
   const nowIso = now.toISOString();
   const today = nowIso.slice(0, 10);

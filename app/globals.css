@@ -432,3 +432,27 @@ main section > h2 {
     opacity: 0.55;
   }
 }
+
+.drill-invite,.scope {background:#163b30;color:#f4faea}
+.drill-invite,.drill-controls,.drill-actions {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.drill-invite {margin:1.5rem 0;padding:clamp(1.3rem,3vw,2.4rem);border-radius:8px}
+.drill-invite h2 {font-size:clamp(1.6rem,3vw,2.45rem);line-height:1.15;letter-spacing:-.04em;margin:.45rem 0}
+.drill-invite a,.drill-actions button {background:#dbf79b;color:#183a2c;padding:.72rem 1.1rem;border-radius:4px;font-weight:650}
+.drill {border:1px solid #b7c4b6;border-radius:8px;overflow:hidden;margin:2rem 0;background:white}
+.drill-controls,.drill-actions,.drill-log {padding:1rem clamp(1rem,3vw,2rem)}
+.drill-controls select,.drill-controls button,.drill-actions button {cursor:pointer}
+.drill-controls select {padding:.4rem;border:1px solid #abb8a9;margin-left:.5rem;border-radius:4px}
+.drill-controls button {text-decoration:underline}
+.scope {padding:clamp(1.4rem,4vw,3.5rem);background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:24px 24px}
+.scope h2 {font-size:clamp(2rem,5vw,4rem);letter-spacing:-.055em;line-height:1.05;margin:.7rem 0}
+.signal {display:flex;align-items:center;gap:4px;height:60px;border-bottom:1px solid #769584;margin-bottom:1rem}
+.signal i {flex:0 1 18px;border-radius:2px}
+.signal .up {height:30px;background:#c6ec89}
+.signal .down {height:12px;background:#ff9985}
+.drill-actions {justify-content:flex-start}
+.drill-actions button:first-of-type {background:#ffe1d8;color:#763429}
+.drill-log summary {cursor:pointer;font-weight:600}
+.drill-log ol {max-height:17rem;overflow:auto}
+.drill-log li {display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid #dee4db;padding:.6rem 0;font-size:.9rem}
+.drill-log time,.drill-log b {font-family:var(--font-mono)}
+@media(prefers-reduced-motion:no-preference){.scope h2 {animation:probe-in .3s ease-out}@keyframes probe-in {from {opacity:.4;transform:translateY(4px)}to {opacity:1;transform:none}}}

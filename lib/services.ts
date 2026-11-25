@@ -1,7 +1,6 @@
 import type { ServiceDef } from "./types";
 
-// The services PulseDeck watches. Three are real sites I built and ship;
-// two are stable third-party endpoints that act as controls.
+// Public projects checked by the scheduled prober.
 export const SERVICES: ServiceDef[] = [
   {
     slug: "portfolio",
@@ -25,18 +24,18 @@ export const SERVICES: ServiceDef[] = [
     category: "mine",
   },
   {
-    slug: "github-api",
-    name: "GitHub API",
-    url: "https://api.github.com/zen",
-    description: "Third-party control endpoint.",
-    category: "third-party",
+    slug: "slip-025",
+    name: "Slip 025",
+    url: "https://checkout-incident-lab.vercel.app/",
+    description: "Trace a slow checkout through shipping.",
+    category: "mine",
   },
   {
-    slug: "google-edge",
-    name: "Google Edge",
-    url: "https://www.google.com/generate_204",
-    description: "Third-party control endpoint.",
-    category: "third-party",
+    slug: "holdpoint",
+    name: "Holdpoint",
+    url: "https://faizan00parvez.github.io/holdpoint/",
+    description: "Replay a canary rollout and inspect its stop decision.",
+    category: "mine",
   },
 ];
 

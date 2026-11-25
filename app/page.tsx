@@ -15,6 +15,7 @@ export default function Home() {
         <h1>System overview</h1>
         <a href="https://github.com/Faizan00parvez/pulsedeck">Source code ↗</a>
       </div>
+      <section className="drill-invite"><div><p className="font-mono text-sm">Interactive incident drill</p><h2>What happens after a failed check?</h2><p>Take Slip 025 or Holdpoint offline in a simulation and follow the incident through recovery.</p></div><Link href="/demo">Run the drill</Link></section>
       <StatusBanner state={state} live={live} />
       <dl className="metrics">
         <div>

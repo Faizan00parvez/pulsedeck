@@ -8,11 +8,9 @@ export const metadata: Metadata = { title: "Project demo · PulseDeck" };
 export default function DemoPage() {
   return (
     <div className="workspace">
-      <h1>Meet PulseDeck</h1>
+      <h1>Run an incident drill</h1>
       <p className="mt-3 max-w-2xl text-lg text-mist-300">
-        PulseDeck checks whether my websites are reachable, records how fast they
-        respond, and tracks outages from the first failed check through recovery.
-        Step through an example with my portfolio site.
+        Choose a project and decide what its next probe returns. Try two failures followed by a recovery and watch the incident record change.
       </p>
       <Replay />
       <section className="mt-10">
