@@ -9,7 +9,7 @@ const STEPS = [
   {
     title: "Schedule",
     file: ".github/workflows/probe.yml",
-    desc: "GitHub Actions is scheduled to run the prober every 30 minutes (cron */30). GitHub's scheduler is best-effort, so runs actually land every few hours — the dashboard measures the real cadence from probe timestamps and displays that instead of the configured one. Concurrency is locked so two runs never overlap and corrupt state.",
+    desc: "GitHub Actions schedules five service checks at minutes 17 and 47 of each hour. Scheduled runs can arrive late or be skipped. The dashboard shows the target interval and the median gap between recent recorded probes. A concurrency group serializes updates to the data branch.",
   },
   {
     title: "Store",
@@ -43,7 +43,7 @@ const DECISIONS = [
   },
   {
     q: "Why not probe every minute?",
-    a: "A deliberate cost/precision trade-off. These are brochure sites, not payment gateways — a few checks a day catches real outages while staying far inside free-tier limits for Actions minutes and git history size. And instead of claiming a cadence, the dashboard measures the real one from probe timestamps: GitHub's scheduler is best-effort, so honest reporting beats a configured number.",
+    a: "A half-hour target limits runner usage and the size of the probe history. The dashboard publishes the latest check time so visitors can judge how fresh the observations are.",
   },
 ];
 

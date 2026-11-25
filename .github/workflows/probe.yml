@@ -5,7 +5,7 @@ name: probe
 # branch at runtime, so the dashboard stays live without rebuilds.
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "17,47 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -54,6 +54,7 @@ jobs:
 
       - name: File GitHub issues for incidents
         env:
+          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULSE_STATE_PATH: ${{ github.workspace }}/data-ws
         run: node src/scripts/sync-issues.mjs

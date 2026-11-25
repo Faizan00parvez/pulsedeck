@@ -48,7 +48,7 @@ export async function GET() {
     status: services.every((s) => s.status !== "down") ? "operational" : "incident",
     live,
     updated_at: state.updatedAt,
-    probe_schedule: "*/30 * * * *",
+    probe_schedule: "17,47 * * * *",
     probe_cadence_minutes: cadenceMs === null ? null : Math.round(cadenceMs / 60000),
     probe_cadence_note:
       "Measured from recent probe timestamps. GitHub Actions schedules are best-effort, so the observed cadence differs from the configured cron.",

@@ -25,13 +25,13 @@ automatically when something goes down.
 scripts/       GitHub          git itself    GitHub        Next.js
 probe.mjs      Actions         data branch   Issues        + Vercel
 (zero deps)    scheduled       state.json    auto open/    runtime fetch
-               (cron */30)                  close
+               (cron 17,47)                  close
 ```
 
 | Stage | What happens |
 |-------|--------------|
 | **Probe** | `scripts/probe.mjs` (Node, zero dependencies) hits each service with a 10s timeout and records reachability, latency and HTTP status. |
-| **Schedule** | `.github/workflows/probe.yml` schedules it every 30 minutes (cron `*/30`). GitHub's scheduler is best-effort so runs actually land every few hours — the site measures the real cadence from probe timestamps and displays that. A concurrency group guarantees two runs never overlap and corrupt state. |
+| **Schedule** | `.github/workflows/probe.yml` schedules it every 30 minutes (at :17 and :47 UTC). GitHub's scheduler is best-effort so runs can arrive late or be skipped — the site measures the real cadence from probe timestamps and displays that. A concurrency group guarantees two runs never overlap and corrupt state. |
 | **Store** | Results land in git itself: rolling samples, daily aggregates and incidents live in `state.json` on an orphan `data` branch. Git is the database — every datapoint is versioned, diffable and auditable. |
 | **Alert** | `scripts/sync-issues.mjs` turns probe events into GitHub Issues: an up→down transition opens one, recovery closes it. The full alert → resolve loop with no pager service. |
 | **Serve** | The Next.js site ships with a bundled snapshot, then swaps in live state from the `data` branch at runtime via `raw.githubusercontent.com` — fresh data with zero rebuilds per probe. |

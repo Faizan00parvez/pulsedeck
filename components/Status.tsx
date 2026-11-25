@@ -67,7 +67,8 @@ export function StatusBanner({
         </h2>
         <p className="timing" title={new Date(state.updatedAt).toUTCString()}>
           Checked {timeAgoFrom(state.updatedAt, now)}
-          {cadence !== null && <> · Probes {formatCadence(cadence)}</>}
+           ? Scheduled every 30 min
+          {cadence !== null && <> · Recent median gap {formatCadence(cadence)}</>}
         </p>
         <Link href="/incidents">View incident log →</Link>
       </div>
