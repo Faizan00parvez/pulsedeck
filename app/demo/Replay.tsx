@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useState } from "react";
 import { SERVICES } from "../../lib/services";
@@ -9,7 +9,7 @@ const baseline: Check = { ok: true, event: "Baseline recorded" };
 
 function clock(index: number) {
   const minutes = 9 * 60 + index * 30;
-  return `Day ${Math.floor(minutes / 1440) + 1} Â· ${String(Math.floor(minutes / 60) % 24).padStart(2, "0")}:${index % 2 ? "30" : "00"}`;
+  return `Day ${Math.floor(minutes / 1440) + 1} · ${String(Math.floor(minutes / 60) % 24).padStart(2, "0")}:${index % 2 ? "30" : "00"}`;
 }
 
 export default function Replay() {
@@ -32,11 +32,11 @@ export default function Replay() {
       {projects.map(project => <option key={project.slug} value={project.slug}>{project.name}</option>)}
     </select></label><button onClick={() => setChecks([baseline])}>Reset drill</button></div>
     <div className="scope" aria-live="polite">
-      <p className="font-mono text-sm">Simulated HTTP probe Â· {clock(count)} UTC</p>
+      <p className="font-mono text-sm">Simulated HTTP probe · {clock(count)} UTC</p>
       <h2 key={count}>{last.ok ? "200 OK" : "503 Service unavailable"}</h2>
       <p className="font-mono break-all">{projects.find(project => project.slug === slug)?.url}</p>
-      <div className="signal" aria-hidden="true">{checks.slice(-40).map((check,i) => <i key={count-i} className={check.ok ? "up" : "down"} />)}</div>
-      <p>{last.event} Â· {start < 0 ? "No incident" : `${closed ? "Resolved" : "Open"} incident Â· ${end - start} failed check${end - start === 1 ? "" : "s"} Â· ${((closed ? end : count) - start) * 30} min since detection`}</p>
+      <div className="drill-signal" aria-hidden="true">{checks.slice(-40).map((check,i) => <i key={count-i} className={check.ok ? "up" : "down"} />)}</div>
+      <p>{last.event} · {start < 0 ? "No incident" : `${closed ? "Resolved" : "Open"} incident · ${end - start} failed check${end - start === 1 ? "" : "s"} · ${((closed ? end : count) - start) * 30} min since detection`}</p>
     </div>
     <div className="drill-actions"><strong>Next simulated response</strong><button onClick={() => run(false)}>Send 503 failure</button><button onClick={() => run(true)}>Send 200 success</button></div>
     <details open className="drill-log"><summary>Probe log ({checks.length})</summary><ol>{checks.map((check,i) => <li key={i}><time>{clock(i)}</time><b>{check.ok ? "200" : "503"}</b>{check.event}</li>).reverse()}</ol></details>

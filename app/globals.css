@@ -445,10 +445,10 @@ main section > h2 {
 .drill-controls button {text-decoration:underline}
 .scope {padding:clamp(1.4rem,4vw,3.5rem);background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:24px 24px}
 .scope h2 {font-size:clamp(2rem,5vw,4rem);letter-spacing:-.055em;line-height:1.05;margin:.7rem 0}
-.signal {display:flex;align-items:center;gap:4px;height:60px;border-bottom:1px solid #769584;margin-bottom:1rem}
-.signal i {flex:0 1 18px;border-radius:2px}
-.signal .up {height:30px;background:#c6ec89}
-.signal .down {height:12px;background:#ff9985}
+.drill-signal {display:flex;align-items:center;gap:4px;height:60px;border-bottom:1px solid #769584;margin-bottom:1rem}
+.drill-signal i {flex:0 1 18px;border-radius:2px}
+.drill-signal .up {height:30px;background:#c6ec89}
+.drill-signal .down {height:12px;background:#ff9985}
 .drill-actions {justify-content:flex-start}
 .drill-actions button:first-of-type {background:#ffe1d8;color:#763429}
 .drill-log summary {cursor:pointer;font-weight:600}
